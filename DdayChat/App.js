@@ -9,8 +9,41 @@ export default class App extends React.Component {
 			dday: new Date(),
 			ddayTitle: '테스트 디데이',
 			chatLog: [],
+			settingModal: false,
 		}
 	}
+
+	toggleSettingModal() {
+		this.setState({
+			settingModal: !this.state.settingModal
+		})
+	}
+
+	settingHandler(title, date) {
+		this.setState({
+			ddayTitle: title,
+			dday: date,
+		});
+		this.toggleSettingModal();
+	}
+
+	makeDateString() {
+		return this.state.dday.getFullYear() + '년 ' + (this.state.dday.getMonth() + 1) + '월 ' + this.state.dday.getDate() + '일';
+	}
+
+	makeRemainString() {
+		const distance = new Date().getTime() - this.state.dday.getTime();
+		console.log(new Date(), this.state.dday.distance / (1000 * 60 * 60 * 24))
+		const remain = Math.floor(distance / (1000 * 60 * 60 * 24));
+
+		if (remain < 0) 
+			return 'D' + remain;
+		else if (remain > 0)
+			return 'D+' + remain;
+		else if (remain === 0)
+			return 'D-day';
+	}
+
 	render() {
 		return (
 			<View style={styles.container}>
@@ -27,26 +60,28 @@ export default class App extends React.Component {
 							{this.state.ddayTitle}까지
 						</Text>
 						<Text style = {styles.ddayText}>
-							D-132
+							{this.makeRemainString()}
 						</Text>
 						<Text style = {styles.dateText}>
-							2022년 7월 8일
+							{this.makeDateString()}
 						</Text>
 					</View>
 					<View style={styles.chatView}>
-						<ScrollView style = {styles.chatScrollView} >
-							
+						<ScrollView style = {styles.chatScrollView}>
 						</ScrollView>
 						<View style = {styles.chatControl} >
 							<TextInput style = {styles.charInput} />
-								<TouchableOpacity style = {styles.sendButton}>
-									<Text>
-										전송
-									</Text>
-								</TouchableOpacity>
+							<TouchableOpacity style = {styles.sendButton}>
+								<Text>
+									전송
+								</Text>
+							</TouchableOpacity>
 						</View>
 					</View>
-					<Setting/>
+					{ this.state.settingModal ? 
+					<Setting
+						modalHandler = {() => this.toggleSettingModal()}
+						settingHandler = {(title, date) => this.settingHandler(title, date)}/> : <></> }
 				</ImageBackground>
 		  	</View>
 		);

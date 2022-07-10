@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, Text, TextInput, TouchableOpacity} from 'react-native';
+import DatePicker from 'react-native-date-picker';
 
 export default class Setting extends React.Component {
 	constructor(props) {
@@ -12,12 +13,24 @@ export default class Setting extends React.Component {
 
 	render() {
 		return (
-			<View style={StyleSheet.container}>
-				<TouchableOpacity style = {styles.background}/>
+			<View style={styles.container}>
+				<TouchableOpacity 
+					style = {styles.background}
+					activeOpacity = {1}
+					onPress = {this.props.modalHandler}/>
 				<View style = {styles.modal}>
 					<Text style = {styles.titleText}>설정</Text>
-					<TextInput/>
-					<TouchableOpacity>
+					<TextInput
+						style = {styles.ddayInput}
+						value = {this.state.title}
+						onChangeText = {(changedText) => {this.setState({title: changedText})}}
+						placeholder = {"디데이 제목을 입력해주세요."}/>
+					<DatePicker
+						date = {this.state.date}
+						mode = "date"
+						onDateChange = {(date) => {this.setState({date: date})}}/>
+					<TouchableOpacity
+						onPress = {() => this.props.settingHandler(this.state.title, this.state.date)}>
 						<Text style = {styles.doneText}>
 							완료
 						</Text>
